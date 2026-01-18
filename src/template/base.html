@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="static/node_modules/@xterm/xterm/css/xterm.css" />
+    <script src="static/node_modules/@xterm/xterm/lib/xterm.js"></script>
+  </head>
+  <body>
+    <div style="display: flex; justify-content: center;">
+      <div id="terminal"></div>
+    </div>
+    
+    <script>
+      let rows = 50;
+      let cols = 200;
+
+      const term = new Terminal({
+        rows: rows, 
+        cols: cols,
+        cursorBlink: true, 
+        theme: {
+          background: "#010747",
+        }
+        
+      });
+      term.open(document.getElementById('terminal'));
+
+      console.log("Connecting to WebSocket...");
+      console.log("WebSocket URL: ws://127.0.0.1:2280/ws/ssh");
+      const socket = new WebSocket("ws://127.0.0.1:2280/ws/ssh");
+      socket.binaryType = "arraybuffer";
+
+      socket.onopen = () => {
+        term.write("Connected to SSH server\r\n");
+        socket.send(JSON.stringify({cols: cols, rows: rows}));
+        term.focus();
+      };
+
+      socket.addEventListener("message", (event) => {
+        term.write(new TextDecoder().decode(event.data));
+      });
+
+      term.onData(data => {
+        // const encoder = new TextEncoder();
+        socket.send(new TextEncoder().encode(data));
+      });
+    </script>
+  </body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="static/styles.css"/>
+  <meta charset="UTF-8">
+  <title>Server info</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 220px;
+      background: #eaeaea;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .logo {
+      font-size: 26px;
+      font-weight: bold;
+      color: #007BFF;
+      margin-bottom: 30px;
+    }
+    .server {
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      margin: 6px 0;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .server:hover {
+      background: #f0f0f0;
+    }
+    .main {
+      flex: 1;
+      padding: 30px;
+      background: #fff;
+      overflow-y: auto;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .block {
+      border: 1px solid #ddd;
+      margin-bottom: 20px;
+      background: #fafafa;
+      padding: 15px;
+    }
+    .block h3 {
+      margin-top: 0;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    .params {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .accounts {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo">WST</div>
+      <hr>
+      <div class="server">root@domen1 <span>></span></div>
+      <hr>
+      <div class="server">root@domen2 <span>></span></div>
+      <hr>
+      <div class="server">user2@domen2 <span>></span></div>
+    </div>
+    <div class="main">
+      <div class="title">Server info</div>
+      <div class="block">
+        <div><strong>IP:</strong> ip</div>
+        <div><strong>port:</strong> port</div>
+        <div><strong>user:</strong> root</div>
+      </div>
+      <div class="block">
+        <h3>Parameters:</h3>
+        <div class="params">
+          OS: Ubuntu 24.04.3 LTS x86_64 <br>
+          Host: KVM/QEMU (Standard PC (i440FX + PIIX, 1996) pc-i440fx-7.2) <br>
+          Kernel: 6.8.0-55-generic <br>
+          Uptime: 211 days, 10 hours, 4 mins <br>
+          Packages: 1564 (dpkg), 7 (snap) <br>
+          Shell: bash 5.2.21 <br>
+          Terminal: /dev/pts/0 <br>
+          CPU: AMD Ryzen 9 3900 (6) @ 3.099GHz <br>
+          GPU: 00:02.0 Vendor 1234 Device 1111 <br>
+          Memory: 12653MiB / 15992MiB
+        </div>
+      </div>
+      <div class="block">
+        <h3>Accounts which have accses</h3>
+        <div class="accounts">
+          194.62.137.156 <br>
+          192.64.167.153
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html> -->
