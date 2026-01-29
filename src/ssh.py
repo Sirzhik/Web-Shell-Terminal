@@ -1,111 +1,126 @@
-from time import time
-from fastapi import WebSocket, APIRouter
-from starlette.websockets import WebSocketDisconnect
-from db.db import get_full_table, VirtualUsers, get_session_by_session_str, decrypt_string, get_virtual_user_by_id, get_group_by_user_id, is_group_linked
+from fastapi import WebSocket
 from io import StringIO
 
 import paramiko
 import asyncio
 
 
-router = APIRouter(prefix='/ws', tags=['WebSocket'])
+k_types = {
+    "RSA": paramiko.RSAKey,
+    "ECDSA": paramiko.ECDSAKey,
+    "Ed25519": paramiko.Ed25519Key,
+    "ed25519": paramiko.Ed25519Key,
+}
 
-@router.websocket('/ssh/{virtual_user_id}')
-async def websocket_endpoint(ws: WebSocket, virtual_user_id: int):
-    try:
-        virt_usr = await get_virtual_user_by_id(virtual_user_id)
-    except Exception as e:
-        await ws.close(code=1008, reason="Virtual user not found")
-        return
+class SSHSession:
+    def __init__(
+        self,
+        ws: WebSocket,
+        host: str,
+        port: int,
+        username: str,
+        password: str = None,
+        pkey: str = None,
+        key_type: str = None,
+        passphrase: str = None,
+        termsize: dict | None = None,
+    ):
+        self.ws = ws
+        self.host = host
+        self.port = port
+        self.username = username
+        self.password = password
+        self.pkey = pkey
+        self.key_type = key_type
+        self.passphrase = passphrase
+        self.termsize = termsize or {"cols": 80, "rows": 24}
 
-    if not virt_usr:
-        await ws.close(code=1008, reason="Virtual user not found")
-        return
+        self.ssh: paramiko.SSHClient | None = None
+        self.chan = None
+        self.loop = None
+        self.stop_event: asyncio.Event | None = None
+        self.queue: asyncio.Queue | None = None
 
-    host = virt_usr.domain
-    user = virt_usr.username
-    port = virt_usr.port
-    password = await decrypt_string(virt_usr.password) if virt_usr.password else None
-    key = await decrypt_string(virt_usr.ssh_key) if virt_usr.ssh_key else None
-    passphrase = await decrypt_string(virt_usr.passphrase) if virt_usr.passphrase else None
-    key_type = virt_usr.ssh_key_type
-    k_types = {
-        "RSA": paramiko.RSAKey,
-        "ECDSA": paramiko.ECDSAKey,
-        "Ed25519": paramiko.Ed25519Key,
-        "ed25519": paramiko.Ed25519Key,
-    }
+    async def connect(self) -> bool:
+        self.ssh = paramiko.SSHClient()
+        self.ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        try:
+            kwargs = {
+                "hostname": self.host,
+                "port": self.port,
+                "username": self.username,
+                "timeout": 120,
+                "password": self.password,
+                "pkey": None,
+                "passphrase": self.passphrase.encode() if self.passphrase else None,
+            }
 
-    session = ws.cookies.get("session")
-    if not session:
-        await ws.close(code=1008, reason="No session cookie found")
-        return
-    
-    session = await get_session_by_session_str(session)
+            if self.pkey:
+                if self.key_type not in k_types:
+                    raise ValueError("Unsupported key type")
+                key_file = StringIO(self.pkey)
+                kwargs["pkey"] = k_types[self.key_type](
+                    file_obj=key_file,
+                    password=self.passphrase.encode() if self.passphrase else None,
+                )
 
-    web_user_id = session.user_id
-    group_id = await get_group_by_user_id(web_user_id)
+            await asyncio.to_thread(self.ssh.connect, **kwargs)
 
-    if not await is_group_linked(group_id, virtual_user_id):
-        await ws.close(code=1008, reason="Access to this virtual user is not allowed")
-        return
+            self.chan = self.ssh.invoke_shell(term="xterm")
+            self.chan.setblocking(True)
+            self.chan.resize_pty(self.termsize["cols"], self.termsize["rows"])
 
-    if not session or session.expires_at < int(time()):
-        await ws.close(code=1008, reason="Invalid or expired session")
+            self.loop = asyncio.get_running_loop()
+            self.stop_event = asyncio.Event()
+            self.queue = asyncio.Queue(maxsize=100)
 
-    await ws.accept()
+            return True
 
-    try:
-        kwargs = {
-                'hostname': host,
-                'port': port,
-                'username': user,
-                'timeout': 120,
-                'passphrase': passphrase.encode() if passphrase else None,
-                'pkey': None,
-                'password': password,
-        }
+        except Exception as e:
+            try:
+                await self.ws.close(code=1011, reason="SSH connection failed")
+            except Exception:
+                pass
+            if self.ssh:
+                try:
+                    self.ssh.close()
+                except Exception:
+                    pass
+            return False
 
-        if key:
-            key_file = StringIO(key)
-            kwargs['pkey'] = k_types[key_type](file_obj=key_file, password=passphrase.encode() if passphrase else None)
+    def ssh_reader(self):
+        try:
+            while not self.stop_event.is_set():
+                data = self.chan.recv(1024)
+                
+                if not data:
+                    break
 
-        await asyncio.to_thread(ssh.connect, **kwargs)
-    except Exception as e:
-        print(f"SSH connection failed: {type(e).__name__}: {e}")
-        await ws.close(code=1011, reason=str(e))
-        return
+                asyncio.run_coroutine_threadsafe(self.queue.put(data), self.loop)
 
-    termsize: dict = await ws.receive_json()
-    print(f"Terminal size: {termsize}")
+        except Exception:
+            pass
 
-    chan = ssh.invoke_shell(term='xterm')
-    chan.setblocking(False)
-    chan.resize_pty(termsize['cols'], termsize['rows'])
-
-    try:
-        async def reader():
+    async def ws_writer(self):
+        try:
             while True:
-                await asyncio.sleep(0.01)
-                if chan.recv_ready():
-                    data = await asyncio.to_thread(chan.recv, 1024)
-                    if data:
-                        await ws.send_bytes(data)
+                data = await self.queue.get()
+                await self.ws.send_bytes(data)
+        except asyncio.CancelledError:
+            pass
 
-        asyncio.create_task(reader())
-
-        while True:
-            inp_mess = await ws.receive_bytes()
-            await asyncio.to_thread(chan.send, inp_mess)
-
-    except WebSocketDisconnect:
-        print("WebSocket disconnected")
-        chan.close()
-        ssh.close()
-    except Exception as e:
-        print(f"Session error: {type(e).__name__}: {e}")
-        chan.close()
-        ssh.close()
+    async def close(self):
+        try:
+            if self.chan:
+                try:
+                    self.chan.close()
+                except Exception:
+                    pass
+            if self.ssh:
+                try:
+                    self.ssh.close()
+                except Exception:
+                    pass
+        except Exception:
+            pass

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from ssh import router as ssh_router
+from term import router as ssh_router
 from auth import router as auth_router
 from db.admin_routers import app as admin_app
 from template.template import app as template_app
