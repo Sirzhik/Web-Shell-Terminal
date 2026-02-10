@@ -28,7 +28,6 @@ from db.db import (
     get_user_by_id,
     validate_credentials,
     # is_account_linked,
-    get_servers_by_user_id as db_get_servers_by_user_id,
     get_server_by_id,
     validate_admin_credentials,
     get_admin_session_by_field,
@@ -76,10 +75,6 @@ async def view_tables():
         "group_to_server": await get_full_table(GroupToServer),
         "admin_sessions": await get_full_table(AdminSessions)
     }
-
-@app.get('/get_servers_by_user_id/{user_id}')
-async def get_servers_by_user_id(user_id: int):
-    return await db_get_servers_by_user_id(user_id=user_id)
 
 @app.post('/add_user')
 async def add_user(user: AddUserSchema):
