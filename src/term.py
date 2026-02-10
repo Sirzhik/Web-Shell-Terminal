@@ -4,7 +4,6 @@ from starlette.websockets import WebSocketDisconnect
 from db.db import get_session_by_session_str, decrypt_string, get_virtual_user_by_id, get_group_by_user_id, is_group_linked
 from ssh import SSHSession
 
-import paramiko
 import asyncio
 
 router = APIRouter(prefix="/ws", tags=["WebSocket"])

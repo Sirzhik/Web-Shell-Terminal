@@ -225,6 +225,16 @@ async def remove_session(session_str: str) -> None:
             await session.delete(sess)
             await session.commit()
 
+async def remove_admin_session(session_str: str) -> None:
+    async with primary_session() as session:
+        result = await session.execute(
+            select(AdminSessions).where(AdminSessions.session == session_str)
+        )
+        admin_sess = result.scalars().first()
+        if admin_sess:
+            await session.delete(admin_sess)
+            await session.commit()
+
 async def remove_user(id: int) -> None:
     async with primary_session() as session:
         result = await session.execute(

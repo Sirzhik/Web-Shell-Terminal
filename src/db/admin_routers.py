@@ -1,4 +1,4 @@
-from fastapi import APIRouter, FastAPI, Depends, HTTPException, status
+from fastapi import APIRouter, FastAPI, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 from db.schemas import (
@@ -14,6 +14,7 @@ from db.schemas import (
 )
 from db.db import (
     add_user as db_add_user, 
+    remove_admin_session,
     remove_user, 
     add_virtual_user, 
     link_group_to_server,
@@ -27,7 +28,7 @@ from db.db import (
     get_user_by_id,
     validate_credentials,
     # is_account_linked,
-    get_servers_by_user_id,
+    get_servers_by_user_id as db_get_servers_by_user_id,
     get_server_by_id,
     validate_admin_credentials,
     get_admin_session_by_field,
@@ -75,6 +76,10 @@ async def view_tables():
         "group_to_server": await get_full_table(GroupToServer),
         "admin_sessions": await get_full_table(AdminSessions)
     }
+
+@app.get('/get_servers_by_user_id/{user_id}')
+async def get_servers_by_user_id(user_id: int):
+    return await db_get_servers_by_user_id(user_id=user_id)
 
 @app.post('/add_user')
 async def add_user(user: AddUserSchema):
@@ -156,3 +161,16 @@ async def delete_link_user_to_server(link_data: RemoveLinkUserToServerSchema):
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@app.delete('/logout')
+async def logout(request: Request):
+    content = {"message": "Logout successful"}
+    response = JSONResponse(content=content)
+    response.delete_cookie(key="admin_session")
+    
+    current_session = request.cookies.get("admin_session")
+    
+    if current_session:
+        await remove_admin_session(current_session)
+    
+    return response
