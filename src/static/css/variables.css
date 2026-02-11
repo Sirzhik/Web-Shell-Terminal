@@ -1,12 +1,12 @@
 html {
-    --text-color: #383c3d;
-    --bg-color: #ffffff;
+    --text-color: #ffffff;
+    --bg-color: #76737c;
     --border-color: #bbbbbb;
-    --navbar-bg-color: #6cc7c7;
-    --link-color: #383c3d;
-    --link-visited-color: #383c3d;
-    --msg-box-color: #4e4e4e;
-    --success-color: #00d335;
+    --navbar-bg-color: #0a17a9;
+    --link-color: #ffffff;
+    --link-visited-color: #ffffff;
+    --msg-box-color: #7e7e7e63;
+    --success-color: #17ab3c;
     --warning-color: #ddbc02;
     --error-color: #be0202;
 }

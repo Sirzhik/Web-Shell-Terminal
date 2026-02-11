@@ -6,7 +6,6 @@
   display: none;
 }
 
-*,
 h1,
 h2,
 h3,
@@ -169,7 +168,7 @@ form > button {
 }
 
 .admin-list-elem:hover {
-  background-color: color-mix(in srgb, var(--text-color), white 90%);
+  background-color: color-mix(in srgb, var(--text-color), rgba(133, 133, 133, 0.646) 90%);
   font-weight: 900;
   border-radius: 0.4rem;
 }

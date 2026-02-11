@@ -7,7 +7,8 @@ const term = new Terminal({
   cols: cols,
   cursorBlink: true,
   theme: {
-    background: "#010747"
+    background: "#010747",
+    foreground: "#9a0000",
   },
 });
 term.open(termEl);
