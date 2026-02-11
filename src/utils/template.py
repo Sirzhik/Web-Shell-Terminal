@@ -8,7 +8,7 @@ from time import time
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory='template')
+templates = Jinja2Templates(directory='templates')
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
@@ -40,6 +40,15 @@ async def get_servers_by_user(request: Request,):
 
     return await get_servers_by_user_id(user_id=group_id)
 
-@app.get('/{id}')
+@app.get('/', name='List of available terminals', tags=['Views'])
+def terms_list(
+    request: Request,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name='terms_list.html'
+    )
+
+@app.get('/{id}', name='Terminal window', tags=['Views'])
 async def term(request: Request, id: int):
-    return templates.TemplateResponse(request=request, name='terminal.html', context={'id': id}) # Doesnt work
+    return templates.TemplateResponse(request=request, name='terminal.html', context={'id': id}) 

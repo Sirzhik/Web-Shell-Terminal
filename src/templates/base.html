@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    
+    <link rel="stylesheet" href="{{ url_for('static', path='node_modules/@xterm/xterm/css/xterm.css') }}" />
+    <script src="{{ url_for('static', path='node_modules/@xterm/xterm/lib/xterm.js') }}"></script>
+    
+    <script src="/static/js/hiddenToggle.js"></script>
+    <link rel="stylesheet" href="/static/css/app.css" />
+
+    <link rel="favicon" href="/static/assets/favicon.svg" />
+    <title>WST - {% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <div id="navbar" class="p-5 bg-cyan-600", style="margin-bottom: 1%;">
+      <svg data-toggle='menu'
+        id="menuBtn"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM18.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z">
+      </svg>
+      <h1 onclick='location.reload()' style='cursor: pointer'>
+        WST 
+      </h1>
+    </div>
+    <div id="menu" class="hidden">
+      <a href="/" class="menuPoint"> Introdution </a>
+      {% if request.cookies.get('admin_session') %}
+        {# Only for authorized admins #}
+        <a href="/admin/panel" class="menuPoint"> Admin panel </a> 
+        <a data-logouton="/admin/logout" class="menuPoint" id="logoutBtn" style='cursor: pointer'> Close Admin Session </a>
+        <script type="module" src="/static/js/logout.js"></script>
+      {% endif %}
+      {% if request.cookies.get('session') %}
+        {# Only for authorized users #} 
+        <a href="/term/" class="menuPoint"> My terminals </a>
+        <a data-logouton="/auth/logout" class="menuPoint" id="logoutBtn" style='cursor: pointer'> Logout </a>
+        <script type="module" src="/static/js/logout.js"></script>
+        {% if request.cookies.get('admin_session') %}
+        {% else %}
+          {# Only for authorized and not admins #}
+          <form data-endpoint="/auth/admin-login" data-type='passkey' class="auth-form" style='display: flex; flex-direction: row; margin-top: 1rem; gap: 0px;'>
+            <input name="password" type="password" placeholder="Admin passkey" style='border-radius: 0px'>
+            <button type="submit" style='width: fit-content;'>Login</button>
+          </form>
+          <script src="/static/js/form_send.js"></script>
+        {% endif %}
+      {% else %}
+        {# Only for unauthorized users #}
+        <a href="/auth" class="menuPoint"> Login </a>
+      {% endif %}
+    </div>
+
+    <div id="content", style="margin-bottom: 1%; color: #ffffff">
+      {% block body %} {% endblock %}
+    </div>
+  </body>
+</html>

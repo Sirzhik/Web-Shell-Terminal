@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}
+My terminals
+{% endblock %}
+
+{% block body %}
+<h1><b>Available terminals</b></h1>
+<div id="termsList" style='display: flex; flex-wrap: wrap; gap: 0.5rem;'></div>
+
+<script src="/static/js/my_terms.js"></script>
+{% endblock %}

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, FastAPI, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
+from utils.template import templates
 from db.schemas import (
     AddUserSchema,
     AddVirtualUserSchema,
@@ -65,6 +66,17 @@ async def admin_auth_middleware(request, call_next):
     response = await call_next(request)
     return response
 
+# Admin views
+@app.get('/panel', name='Admin panel', tags=['Views'])
+def admin_panel(
+    request: Request,
+):
+    return templates.TemplateResponse(
+        request=request,
+        name='admin_panel.html'
+    )
+
+# Admin API
 @app.get('/view-tables')
 async def view_tables():
     return {
@@ -157,15 +169,3 @@ async def delete_link_user_to_server(link_data: RemoveLinkUserToServerSchema):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-@app.delete('/logout')
-async def logout(request: Request):
-    content = {"message": "Logout successful"}
-    response = JSONResponse(content=content)
-    response.delete_cookie(key="admin_session")
-    
-    current_session = request.cookies.get("admin_session")
-    
-    if current_session:
-        await remove_admin_session(current_session)
-    
-    return response

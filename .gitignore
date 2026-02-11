@@ -3,13 +3,9 @@ include/
 lib/
 local/
 src/__pycache__/
+__init__.py
 src/database/
-src/database/__pycache__/
-src/db/__pycache__/
-src/models/__pycache__/
-src/routers/__pycache__/
-src/schemas/__pycache__/
-src/tests/__pycache__/
+__pycache__/
 src/database/*.db
 pyvenv.cfg
 venv/
@@ -18,3 +14,10 @@ lib64
 *.pyo
 *.pyd
 __pycache__/
+node_modules/
+package-lock.json
+package.json
+db_OLD.py
+.venv/
+.idea/
+.vscode/

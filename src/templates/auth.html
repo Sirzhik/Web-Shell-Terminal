@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %} Auth {% endblock %} {% block body %}
+<div class='flex-wrapper'>
+  {% if request.cookies.get('session') %}
+  {% else %}
+  <form data-endpoint="/auth/login" class="auth-form" data-type='auth'>
+    <h1 id="stateTitle" class="text-3xl font-bold">User Login</h1>
+    <input name="username" type="text" placeholder="username" />
+    <input name="password" type="password" placeholder="password" />
+    <button type="submit">Log in</button>
+  </form>
+  {% endif %}
+  
+  {% if request.cookies.get('admin_session') %}
+  {% else %}
+  <form data-endpoint="/auth/admin-login" class="auth-form" data-type='passkey'>
+    <h1 id="stateTitle" class="text-3xl font-bold">Admin passkey</h1>
+    <input name="password" type="password" placeholder="Admin passkey" />
+    <button type="submit">Log in</button>
+  </form>
+  {% endif %}
+</div>
+
+<script src="/static/js/form_send.js"></script>
+{% endblock %}

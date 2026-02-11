@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from fastapi import Request
-from db.db import (get_user_by_username, validate_credentials, 
+from db.db import (get_user_by_username, remove_admin_session, validate_credentials, 
                    create_session, get_session_by_session_str, 
                    remove_session, validate_admin_credentials, 
                    create_admin_session, get_admin_session_by_field)
@@ -103,3 +103,16 @@ async def admin_login(request: Request, credentials: PasswordSchema):
 
         return response
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
+
+@router.delete('/admin-logout')
+async def logout(request: Request):
+    content = {"message": "Logout successful"}
+    response = JSONResponse(content=content)
+    response.delete_cookie(key="admin_session")
+    
+    current_session = request.cookies.get("admin_session")
+    
+    if current_session:
+        await remove_admin_session(current_session)
+    
+    return response

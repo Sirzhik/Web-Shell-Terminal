@@ -1,0 +1,12 @@
+html {
+    --text-color: #383c3d;
+    --bg-color: #ffffff;
+    --border-color: #bbbbbb;
+    --navbar-bg-color: #6cc7c7;
+    --link-color: #383c3d;
+    --link-visited-color: #383c3d;
+    --msg-box-color: #4e4e4e;
+    --success-color: #00d335;
+    --warning-color: #ddbc02;
+    --error-color: #be0202;
+}

@@ -1,0 +1,112 @@
+{% extends "base.html" %} {% block title %} Admin panel {% endblock %} {% block
+body %}
+<script src="/static/js/admin_panel.js"></script>
+<script src="/static/js/server_settings.js"></script>
+<script src="/static/js/server_links_handler.js"></script>
+<script src="/static/js/user_settings.js"></script>
+<script src="/static/js/user_group_handler.js"></script>
+
+<div class="flex-wrapper">
+  <div class="admin-list">
+    <div class="admin-list-title">
+      <h1>Web Users</h1>
+    </div>
+    <button data-toggle="addUserForm" class="admin-list-insert-btn">
+      New User
+    </button>
+    <form id="addUserForm" class="hidden" data-endpoint="/admin/add_user">
+      <input
+        name="username"
+        placeholder="username"
+        pattern="^[A-Za-z0-9]{4,32}$"
+        required
+      />
+      <input
+        name="password"
+        placeholder="password"
+        type="password"
+        pattern="^[A-Za-z0-9]{4,32}$"
+        required
+      />
+      <button>Add User</button>
+    </form>
+    <div id="users_list"></div>
+  </div>
+
+  <div class="admin-list">
+    <div class="admin-list-title">
+      <h1>Groups</h1>
+    </div>
+    <button data-toggle="addGroupForm" class="admin-list-insert-btn">
+      New Group
+    </button>
+    <form id="addGroupForm" class="hidden" data-endpoint="/admin/add_group">
+      <input
+        name="name"
+        placeholder="name"
+        pattern="^[A-Za-z0-9]{4,32}$"
+        required
+      />
+      <button>Add Group</button>
+    </form>
+    <div id="groups_list"></div>
+  </div>
+
+  <div class="admin-list">
+    <div class="admin-list-title">
+      <h1>Servers</h1>
+      <h5>
+        <i> Virtual users </i>
+      </h5>
+    </div>
+    <button data-toggle="addServerForm" class="admin-list-insert-btn">
+      New Server
+    </button>
+    <form
+      id="addServerForm"
+      class="hidden"
+      data-endpoint="/admin/add_virtual_user"
+    >
+      <input
+        name="username"
+        placeholder="Server user"
+        pattern="^[A-Za-z0-9]{1,999}$"
+        required
+      />
+      <input
+        name="password"
+        placeholder="Server user password"
+        type="password"
+        pattern="^[A-Za-z0-9]{4,32}$"
+        required
+      />
+      <input name="ssh_key" placeholder="SSH key" required />
+      <div>
+        <div>
+          <input type="radio" id="RSA" name="ssh_key_type" value="RSA" />
+          <label for="RSA">RSA</label>
+        </div>
+        <div>
+          <input type="radio" id="ECDSA" name="ssh_key_type" value="ECDSA" />
+          <label for="ECDSA">ECDSA</label>
+        </div>
+        <div>
+          <input
+            type="radio"
+            id="Ed25519"
+            name="ssh_key_type"
+            value="Ed25519"
+          />
+          <label for="Ed25519">Ed25519</label>
+        </div>
+      </div>
+      <input name="passphrase" placeholder="Passphrase" required />
+      <input name="domain" placeholder="Domain" required />
+      <button>Add Server</button>
+    </form>
+    <div id="servers_list"></div>
+  </div>
+
+  <script src="/static/js/form_send.js"></script>
+  {% endblock %}
+</div>

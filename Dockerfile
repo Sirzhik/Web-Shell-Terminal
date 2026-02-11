@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 COPY src/ src/
 
 WORKDIR /app/src
-RUN npm install @xterm/xterm --prefix static
+RUN npm install @xterm/xterm 
 
 EXPOSE 2280
 CMD ["python3", "main.py"]
