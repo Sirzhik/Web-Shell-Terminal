@@ -15,22 +15,11 @@ body %}
       New User
     </button>
     <form id="addUserForm" class="hidden" data-endpoint="/admin/add_user">
-      <input
-        name="username"
-        placeholder="username"
-        pattern="^[A-Za-z0-9]{4,32}$"
-        required
-      />
-      <input
-        name="password"
-        placeholder="password"
-        type="password"
-        pattern="^[A-Za-z0-9]{4,32}$"
-        required
-      />
+      <input name="username" placeholder="username" pattern="^[A-Za-z0-9]{4,32}$" required>
+      <input name="password" placeholder="password" type="password" pattern="^[A-Za-z0-9]{4,32}$">
       <button>Add User</button>
     </form>
-    <div id="users_list"></div>
+    <div id="users_list"><div class="admin-list-elem"><p data-userid="1" style="cursor: pointer;">string</p><button class="delete-btn">×</button></div></div>
   </div>
 
   <div class="admin-list">
@@ -41,15 +30,10 @@ body %}
       New Group
     </button>
     <form id="addGroupForm" class="hidden" data-endpoint="/admin/add_group">
-      <input
-        name="name"
-        placeholder="name"
-        pattern="^[A-Za-z0-9]{4,32}$"
-        required
-      />
+      <input name="name" placeholder="name" pattern="^[A-Za-z0-9]{4,32}$" required>
       <button>Add Group</button>
     </form>
-    <div id="groups_list"></div>
+    <div id="groups_list"><div class="admin-list-elem"><p>default</p><button class="delete-btn">×</button></div><div class="admin-list-elem"><p>cct</p><button class="delete-btn">×</button></div><div class="admin-list-elem"><p>test</p><button class="delete-btn">×</button></div></div>
   </div>
 
   <div class="admin-list">
@@ -62,51 +46,31 @@ body %}
     <button data-toggle="addServerForm" class="admin-list-insert-btn">
       New Server
     </button>
-    <form
-      id="addServerForm"
-      class="hidden"
-      data-endpoint="/admin/add_virtual_user"
-    >
-      <input
-        name="username"
-        placeholder="Server user"
-        pattern="^[A-Za-z0-9]{1,999}$"
-        required
-      />
-      <input
-        name="password"
-        placeholder="Server user password"
-        type="password"
-        pattern="^[A-Za-z0-9]{4,32}$"
-        required
-      />
-      <input name="ssh_key" placeholder="SSH key" required />
+    <form id="addServerForm" class="" data-endpoint="/admin/add_virtual_user">
+      <input name="username" placeholder="Server user" pattern="^[A-Za-z0-9]{1,999}$" required>
+      <input name="password" placeholder="Server user password" type="password" pattern="^[A-Za-z0-9]{4,32}$">
+      <input name="ssh_key" placeholder="SSH key">
       <div>
         <div>
-          <input type="radio" id="RSA" name="ssh_key_type" value="RSA" />
+          <input type="radio" id="RSA" name="ssh_key_type" value="RSA">
           <label for="RSA">RSA</label>
         </div>
         <div>
-          <input type="radio" id="ECDSA" name="ssh_key_type" value="ECDSA" />
+          <input type="radio" id="ECDSA" name="ssh_key_type" value="ECDSA">
           <label for="ECDSA">ECDSA</label>
         </div>
         <div>
-          <input
-            type="radio"
-            id="Ed25519"
-            name="ssh_key_type"
-            value="Ed25519"
-          />
+          <input type="radio" id="Ed25519" name="ssh_key_type" value="Ed25519">
           <label for="Ed25519">Ed25519</label>
         </div>
       </div>
-      <input name="passphrase" placeholder="Passphrase" required />
-      <input name="domain" placeholder="Domain" required />
+      <textarea name="passphrase" placeholder="Passphrase"></textarea>
+      <input name="domain" placeholder="Domain" required>
       <button>Add Server</button>
     </form>
-    <div id="servers_list"></div>
+    <div id="servers_list"><div class="admin-list-elem"><p data-serverid="1" style="cursor: pointer;">root@107.161.154.204</p><button class="delete-btn">×</button></div></div>
   </div>
 
   <script src="/static/js/form_send.js"></script>
-  {% endblock %}
-</div>
+  
+    </div>

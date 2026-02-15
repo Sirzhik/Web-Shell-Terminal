@@ -1,12 +1,10 @@
 html {
     --text-color: #ffffff;
-    --bg-color: #76737c;
-    --border-color: #bbbbbb;
-    --navbar-bg-color: #0a17a9;
-    --link-color: #ffffff;
-    --link-visited-color: #ffffff;
-    --msg-box-color: #7e7e7e63;
-    --success-color: #17ab3c;
-    --warning-color: #ddbc02;
-    --error-color: #be0202;
+    --bg-color: #2e2e2e;
+    --navbar-bg-color: #535353;
+    --link-color: #ff7676;
+    --link-visited-color: #ffb0b0;
+    --danger-color: #dd0d0d;
+    --terminal-text: #ffffff;
+    --terminal-bg-color: #232a35;
 }

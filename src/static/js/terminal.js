@@ -6,12 +6,12 @@ const term = new Terminal({
   rows: rows,
   cols: cols,
   cursorBlink: true,
-  theme: {
-    background: "#010747",
-    foreground: "#9a0000",
-  },
 });
 term.open(termEl);
+
+const scrollable = termEl.querySelector('.xterm-scrollable-element');
+scrollable.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--terminal-bg-color').trim();
+
 
 const serverId = termEl?.dataset?.serverId || null;
 console.log("Connecting to WebSocket...");

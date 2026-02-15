@@ -34,3 +34,18 @@
   font-style: italic;
   font-weight: bold;
 }
+
+@font-face {
+  font-family: "Monospace";
+  src: url("../fonts/Monospace/MonospaceRegular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Monospace-Italic";
+  src: url("../fonts/Monospace/MonospaceOblique.ttf") format("truetype");
+  font-style: italic;
+}
+@font-face {
+  font-family: "Monospace-Bold";
+  src: url("../fonts/Monospace/MonospaceBold.ttf") format("truetype");
+  font-weight: bold;
+}
