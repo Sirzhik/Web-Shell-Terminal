@@ -21,3 +21,5 @@ db_OLD.py
 .venv/
 .idea/
 .vscode/
+.DS_Store
+*.log
