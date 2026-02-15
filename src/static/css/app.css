@@ -32,7 +32,7 @@ svg {
 #terminal * {
   background-color: var(--terminal-bg-color);
   /* background: var(--terminal-bg-color); */
-  color: var(--terminal-text);
+  /* color: var(--terminal-text); */
   font-family: "Monospace", sans-serif;
 }
 

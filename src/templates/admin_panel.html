@@ -30,7 +30,7 @@ body %}
       New Group
     </button>
     <form id="addGroupForm" class="hidden" data-endpoint="/admin/add_group">
-      <input name="name" placeholder="name" pattern="^[A-Za-z0-9]{4,32}$" required>
+      <input name="name" placeholder="name" required>
       <button>Add Group</button>
     </form>
     <div id="groups_list"><div class="admin-list-elem"><p>default</p><button class="delete-btn">×</button></div><div class="admin-list-elem"><p>cct</p><button class="delete-btn">×</button></div><div class="admin-list-elem"><p>test</p><button class="delete-btn">×</button></div></div>
@@ -72,5 +72,5 @@ body %}
   </div>
 
   <script src="/static/js/form_send.js"></script>
-  
-    </div>
+  {% endblock %}  
+</div>
