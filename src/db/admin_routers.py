@@ -7,8 +7,8 @@ from db.schemas import (
     AddVirtualUserSchema,
     AddGroupSchema,
     SetGroupForUserSchema,
-    RemoveLinkUserToServerSchema,
-    LinkUserToServerSchema,
+    RemoveLinkGroupToServerSchema,
+    LinkGroupToServerSchema,
     ValidateCredentialsSchema,
     IsAccountLinkedSchema,
     useUserId,
@@ -22,7 +22,7 @@ from db.db import (
     add_group,
     remove_group,
     remove_virtual_user,
-    remove_link_user_to_server,
+    remove_link_group_to_server,
     set_group_for_user,
     get_session_by_session_str,
     get_user_by_username,
@@ -116,7 +116,7 @@ async def add_virtual_user_endpoint(v_user: AddVirtualUserSchema):
         raise HTTPException(status_code=409, detail="Virtual username already exists")
 
 @app.post('/link_group_to_server')
-async def link_group_to_server_endpoint(link_data: LinkUserToServerSchema):
+async def link_group_to_server_endpoint(link_data: LinkGroupToServerSchema):
     try:
         link = await link_group_to_server(group_id=link_data.group_id, server_id=link_data.server_id)
         return {"detail": f"Group {link.group_id} linked to server {link.server_id}"}
@@ -160,10 +160,10 @@ async def delete_virtual_user(id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.delete('/remove_link_user_to_server')
-async def delete_link_user_to_server(link_data: RemoveLinkUserToServerSchema):
+@app.delete('/remove_link_group_to_server')
+async def delete_link_group_to_server(link_data: RemoveLinkGroupToServerSchema):
     try:
-        await remove_link_user_to_server(group_id=link_data.group_id, server_id=link_data.server_id)
+        await remove_link_group_to_server(group_id=link_data.group_id, server_id=link_data.server_id)
         return {"detail": "Link removed successfully"}
     
     except Exception as e:

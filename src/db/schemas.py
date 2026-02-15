@@ -24,11 +24,11 @@ class SetGroupForUserSchema(pydantic.BaseModel):
 class PasswordSchema(pydantic.BaseModel):
     password: str
 
-class RemoveLinkUserToServerSchema(pydantic.BaseModel):
+class RemoveLinkGroupToServerSchema(pydantic.BaseModel):
     group_id: int
     server_id: int
 
-class LinkUserToServerSchema(pydantic.BaseModel):
+class LinkGroupToServerSchema(pydantic.BaseModel):
     group_id: int
     server_id: int
 

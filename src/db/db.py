@@ -279,10 +279,10 @@ async def remove_virtual_user(id: int) -> None:
             await session.delete(user)
             await session.commit()    
 
-async def remove_link_user_to_server(user_id: int, server_id: int) -> None:
+async def remove_link_group_to_server(group_id: int, server_id: int) -> None:
     async with primary_session() as session:
         result = await session.execute(
-            select(GroupToServer).where(GroupToServer.group_id == user_id, GroupToServer.server_id == server_id)
+            select(GroupToServer).where(GroupToServer.group_id == group_id, GroupToServer.server_id == server_id)
         )
         link = result.scalars().first()
         if link:
