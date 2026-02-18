@@ -23,3 +23,4 @@ db_OLD.py
 .vscode/
 .DS_Store
 *.log
+src/.DS_Store

@@ -36,7 +36,7 @@ class WebUsers(Base):
     legacy_session: Mapped[str]
     username: Mapped[str] = mapped_column(nullable=False, unique=True)
     password: Mapped[str] = mapped_column(nullable=False)
-    group_id: Mapped[int] = mapped_column(ForeignKey('groups.id'))
+    group_id: Mapped[int] = mapped_column(ForeignKey('groups.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
 
 class Groups(Base):
     __tablename__ = 'groups'
@@ -48,7 +48,7 @@ class Sessions(Base):
     __tablename__ = 'sessions'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('webusers.id'), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey('webusers.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
     session: Mapped[str] = mapped_column(default=lambda: str(uuid.uuid4()))
     created_at: Mapped[int] = mapped_column()
     expires_at: Mapped[int] = mapped_column(nullable=False)
@@ -79,8 +79,8 @@ class GroupToServer(Base):
     __tablename__ = 'grouptoservers'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    group_id: Mapped[int] = mapped_column(ForeignKey('groups.id'), nullable=False)
-    server_id: Mapped[int] = mapped_column(ForeignKey('sshaccounts.id'), nullable=False)
+    group_id: Mapped[int] = mapped_column(ForeignKey('groups.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
+    server_id: Mapped[int] = mapped_column(ForeignKey('sshaccounts.id', ondelete='CASCADE', onupdate='CASCADE'), nullable=False)
 
 async def encrypt_string(string: str) -> str:
     key = hashlib.sha256(encryption_key.encode()).digest()
@@ -255,10 +255,15 @@ async def remove_group(id: int) -> None:
         result = await session.execute(
             select(Groups).where(Groups.id == id)
         )
-        await remove_user(result.scalars().first().id)
-
         group = result.scalars().first()
         if group:
+            users_result = await session.execute(
+                select(WebUsers.id).where(WebUsers.group_id == group.id)
+            )
+            user_ids = users_result.scalars().all()
+            for user_id in user_ids:
+                await remove_user(user_id)
+
             await session.delete(group)
             await session.commit()
 

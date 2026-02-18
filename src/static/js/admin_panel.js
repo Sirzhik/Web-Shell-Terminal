@@ -12,7 +12,7 @@ const lists_assoc = {
   servers: {
     listId: "servers_list",
     title: (i) => `${i.username}@${i.domain}`,
-    removeType: "virtual_user",
+    removeType: "ssh_account",
   },
 };
 
@@ -71,7 +71,7 @@ function create_listelem(id, title, removeType) {
   const head = document.createElement("p");
   head.innerText = title;
 
-  if (removeType === "virtual_user" || removeType === "user") {
+  if (removeType === "ssh_account" || removeType === "user") {
     head.style.cursor = "pointer";
     
     head.addEventListener("mouseenter", () => {
@@ -82,7 +82,7 @@ function create_listelem(id, title, removeType) {
       head.style.textDecoration = "none";
     });
 
-    if (removeType === "virtual_user") {
+    if (removeType === "ssh_account") {
       head.dataset.serverid = id;
     } else if (removeType === "user") {
       head.dataset.userid = id;

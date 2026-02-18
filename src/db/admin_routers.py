@@ -113,7 +113,7 @@ async def add_ssh_account_endpoint(v_user: AddVirtualUserSchema):
         return {"ssh_account": v_user_result.username, "id": v_user_result.id}
 
     except IntegrityError:
-        raise HTTPException(status_code=409, detail="SSH account username already exists")
+        raise HTTPException(status_code=409, detail="SSH account exception")
 
 @app.post('/link_group_to_server')
 async def link_group_to_server_endpoint(link_data: LinkGroupToServerSchema):
@@ -144,12 +144,13 @@ async def set_group_for_user_endpoint(data: SetGroupForUserSchema):
 
 @app.delete('/remove_group/{id}')
 async def delete_group(id: int):
-    try:
+    # try:
         await remove_group(id=id)
         return {"detail": "Group removed successfully"}
     
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # except Exception as e:
+    #     print(e)
+    #     raise HTTPException(status_code=500, detail=str(e))
 
 @app.delete('/remove_ssh_account/{id}')
 async def delete_ssh_account(id: int):

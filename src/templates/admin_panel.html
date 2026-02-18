@@ -19,7 +19,7 @@ body %}
       <input name="password" placeholder="password" type="password" pattern="^[A-Za-z0-9]{4,32}$">
       <button>Add User</button>
     </form>
-    <div id="users_list"><div class="admin-list-elem"><p data-userid="1" style="cursor: pointer;">string</p><button class="delete-btn">×</button></div></div>
+    <div id="users_list"></div>
   </div>
 
   <div class="admin-list">
@@ -33,7 +33,7 @@ body %}
       <input name="name" placeholder="name" required>
       <button>Add Group</button>
     </form>
-    <div id="groups_list"><div class="admin-list-elem"><p>default</p><button class="delete-btn">×</button></div><div class="admin-list-elem"><p>cct</p><button class="delete-btn">×</button></div><div class="admin-list-elem"><p>test</p><button class="delete-btn">×</button></div></div>
+    <div id="groups_list"></div>
   </div>
 
   <div class="admin-list">
@@ -46,11 +46,16 @@ body %}
     <button data-toggle="addServerForm" class="admin-list-insert-btn">
       New Server
     </button>
-    <form id="addServerForm" class="" data-endpoint="/admin/add_ssh_account">
-      <input name="username" placeholder="Server user" pattern="^[A-Za-z0-9]{1,999}$" required>
-      <input name="password" placeholder="Server user password" type="password" pattern="^[A-Za-z0-9]{4,32}$">
+    <form id="addServerForm" class="hidden" data-endpoint="/admin/add_ssh_account">
+      <input name="username" placeholder="Server user" required>
+      <input name="password" placeholder="Server user password" type="password">
       <input name="ssh_key" placeholder="SSH key">
+      <span style='height: 1rem'>SSH key type:</span>
       <div>
+        <div>
+          <input type="radio" id="NULL" name="ssh_key_type" value="NULL" checked>
+          <label for="NULL">None</label>
+        </div>
         <div>
           <input type="radio" id="RSA" name="ssh_key_type" value="RSA">
           <label for="RSA">RSA</label>
@@ -66,9 +71,10 @@ body %}
       </div>
       <textarea name="passphrase" placeholder="Passphrase"></textarea>
       <input name="domain" placeholder="Domain" required>
+      <input name="port" placeholder="Port" value="22" required>
       <button>Add Server</button>
     </form>
-    <div id="servers_list"><div class="admin-list-elem"><p data-serverid="1" style="cursor: pointer;">root@107.161.154.204</p><button class="delete-btn">×</button></div></div>
+    <div id="servers_list"></div>
   </div>
 
   <script src="/static/js/form_send.js"></script>
