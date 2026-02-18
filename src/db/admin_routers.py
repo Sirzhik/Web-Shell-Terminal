@@ -106,14 +106,14 @@ async def delete_user(id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post('/add_virtual_user')
-async def add_virtual_user_endpoint(v_user: AddVirtualUserSchema):
+@app.post('/add_ssh_account')
+async def add_ssh_account_endpoint(v_user: AddVirtualUserSchema):
     try:
         v_user_result = await add_virtual_user(username=v_user.username, password=v_user.password, ssh_key=v_user.ssh_key, passphrase=v_user.passphrase, ssh_key_type=v_user.ssh_key_type, domain=v_user.domain, port=v_user.port)
-        return {"virtual_user": v_user_result.username, "id": v_user_result.id}
+        return {"ssh_account": v_user_result.username, "id": v_user_result.id}
 
     except IntegrityError:
-        raise HTTPException(status_code=409, detail="Virtual username already exists")
+        raise HTTPException(status_code=409, detail="SSH account username already exists")
 
 @app.post('/link_group_to_server')
 async def link_group_to_server_endpoint(link_data: LinkGroupToServerSchema):
@@ -151,11 +151,11 @@ async def delete_group(id: int):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.delete('/remove_virtual_user/{id}')
-async def delete_virtual_user(id: int):
+@app.delete('/remove_ssh_account/{id}')
+async def delete_ssh_account(id: int):
     try:
         await remove_virtual_user(id=id)
-        return {"detail": "Virtual user removed successfully"}
+        return {"detail": "SSH account removed successfully"}
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

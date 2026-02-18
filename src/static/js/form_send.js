@@ -69,7 +69,7 @@ document.addEventListener("submit", async (e) => {
   const endpointMap = {
     "/admin/add_user": "users",
     "/admin/add_group": "groups",
-    "/admin/add_virtual_user": "servers",
+    "/admin/add_ssh_account": "servers",
   };
 
   const listType = endpointMap[form.dataset.endpoint];

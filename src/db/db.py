@@ -64,7 +64,7 @@ class AdminSessions(Base):
     ip: Mapped[str] = mapped_column(nullable=True)
 
 class VirtualUsers(Base):
-    __tablename__ = 'virtualusers'
+    __tablename__ = 'sshaccounts'
 
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(nullable=False)
@@ -80,7 +80,7 @@ class GroupToServer(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     group_id: Mapped[int] = mapped_column(ForeignKey('groups.id'), nullable=False)
-    server_id: Mapped[int] = mapped_column(ForeignKey('virtualusers.id'), nullable=False)
+    server_id: Mapped[int] = mapped_column(ForeignKey('sshaccounts.id'), nullable=False)
 
 async def encrypt_string(string: str) -> str:
     key = hashlib.sha256(encryption_key.encode()).digest()

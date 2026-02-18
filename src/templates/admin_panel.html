@@ -40,13 +40,13 @@ body %}
     <div class="admin-list-title">
       <h1>Servers</h1>
       <h5>
-        <i> Virtual users </i>
+        <i> SSH accounts </i>
       </h5>
     </div>
     <button data-toggle="addServerForm" class="admin-list-insert-btn">
       New Server
     </button>
-    <form id="addServerForm" class="" data-endpoint="/admin/add_virtual_user">
+    <form id="addServerForm" class="" data-endpoint="/admin/add_ssh_account">
       <input name="username" placeholder="Server user" pattern="^[A-Za-z0-9]{1,999}$" required>
       <input name="password" placeholder="Server user password" type="password" pattern="^[A-Za-z0-9]{4,32}$">
       <input name="ssh_key" placeholder="SSH key">
