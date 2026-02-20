@@ -170,3 +170,15 @@ async def delete_link_group_to_server(link_data: RemoveLinkGroupToServerSchema):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@app.delete('/logout')
+async def logout(request: Request):
+    content = {"message": "Logout successful"}
+    response = JSONResponse(content=content)
+    response.delete_cookie(key="admin_session")
+    
+    current_session = request.cookies.get("admin_session")
+    
+    if current_session:
+        await remove_admin_session(current_session)
+    
+    return response

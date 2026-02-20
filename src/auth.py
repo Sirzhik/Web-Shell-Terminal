@@ -103,16 +103,3 @@ async def admin_login(request: Request, credentials: PasswordSchema):
 
         return response
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
-
-@router.delete('/admin-logout')
-async def logout(request: Request):
-    content = {"message": "Logout successful"}
-    response = JSONResponse(content=content)
-    response.delete_cookie(key="admin_session")
-    
-    current_session = request.cookies.get("admin_session")
-    
-    if current_session:
-        await remove_admin_session(current_session)
-    
-    return response

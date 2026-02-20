@@ -15,8 +15,8 @@ body %}
       New User
     </button>
     <form id="addUserForm" class="hidden" data-endpoint="/admin/add_user">
-      <input name="username" placeholder="username" pattern="^[A-Za-z0-9]{4,32}$" required>
-      <input name="password" placeholder="password" type="password" pattern="^[A-Za-z0-9]{4,32}$">
+      <input name="username" placeholder="username" required>
+      <input name="password" placeholder="password" type="password" required>
       <button>Add User</button>
     </form>
     <div id="users_list"></div>
@@ -49,7 +49,7 @@ body %}
     <form id="addServerForm" class="hidden" data-endpoint="/admin/add_ssh_account">
       <input name="username" placeholder="Server user" required>
       <input name="password" placeholder="Server user password" type="password">
-      <input name="ssh_key" placeholder="SSH key">
+      <textarea name="ssh_key" placeholder="SSH key"></textarea>
       <span style='height: 1rem'>SSH key type:</span>
       <div>
         <div>
@@ -69,7 +69,7 @@ body %}
           <label for="Ed25519">Ed25519</label>
         </div>
       </div>
-      <textarea name="passphrase" placeholder="Passphrase"></textarea>
+      <input name="passphrase" placeholder="Passphrase">
       <input name="domain" placeholder="Domain" required>
       <input name="port" placeholder="Port" value="22" required>
       <button>Add Server</button>
