@@ -5,6 +5,7 @@ class Config(pydantic_settings.BaseSettings):
     SECRET: str = 'WSTestSecretKey'
     ADMIN_PASSWORD: str = 'WSTestAdminPass'
     PORT: int = 2280
+    HOST: str = '0.0.0.0'
     DB_DIRECTORY: str = 'database/wst.db'
     DB_TYPE: str = 'sqlite'
     DB_HOST: str = 'localhost'

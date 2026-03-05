@@ -59,5 +59,5 @@ def auth_page(
 
 
 if __name__ == '__main__':
-    uvicorn.run("main:app", host='0.0.0.0', port=db.env.config.PORT, workers=1, reload=True)
+    uvicorn.run("main:app", host=db.env.config.HOST, port=db.env.config.PORT, workers=1, reload=True)
     # uvicorn.run("main:app", host='127.0.0.1', port=2280, reload=True, access_log=False)
