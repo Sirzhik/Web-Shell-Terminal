@@ -3,20 +3,21 @@ from contextlib import asynccontextmanager
 from term import router as ssh_router
 from auth import router as auth_router
 from db.admin_routers import app as admin_app
+from db.db import db_operator
 from utils.template import app as template_app
 from utils.template import templates
 from fastapi.staticfiles import StaticFiles
 
 
 import uvicorn
-import db.db
+# import db.db
 import db.env
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup: initialize database
-    await db.db.init_db()
+    await db_operator.init_db()
     yield
     # Shutdown: cleanup if needed
 
@@ -57,7 +58,7 @@ def auth_page(
     )
 
 
-
 if __name__ == '__main__':
     uvicorn.run("main:app", host=db.env.config.HOST, port=db.env.config.PORT, workers=1, reload=True)
     # uvicorn.run("main:app", host='127.0.0.1', port=2280, reload=True, access_log=False)
+    
