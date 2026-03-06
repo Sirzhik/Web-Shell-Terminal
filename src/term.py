@@ -34,7 +34,7 @@ async def websocket_endpoint(ws: WebSocket, virtual_user_id: int):
         await ws.close(code=1008, reason="No session cookie found")
         return
 
-    session = await db_operator.set_session_by_session_str(session_cookie)
+    session = await db_operator.get_session_by_session_str(session_cookie)
     if not session or session.expires_at < int(time()):
         await ws.close(code=1008, reason="Invalid or expired session")
         return
@@ -65,7 +65,7 @@ async def websocket_endpoint(ws: WebSocket, virtual_user_id: int):
         termsize=termsize,
     )
 
-    ok = await db_operator.ssh_session.connect()
+    ok = await ssh_session.connect()
     
     if not ok:
         return

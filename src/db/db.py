@@ -241,7 +241,7 @@ class DatabaseOperator:
             result = await session.execute(
                 select(Sessions.session).where(Sessions.user_id == id)
             )
-            await remove_session(result.scalars().first())
+            await self.remove_session(result.scalars().first())
             
             result = await session.execute(
                 select(WebUsers).where(WebUsers.id == id)
@@ -263,7 +263,7 @@ class DatabaseOperator:
                 )
                 user_ids = users_result.scalars().all()
                 for user_id in user_ids:
-                    await remove_user(user_id)
+                    await self.remove_user(user_id)
 
                 await session.delete(group)
                 await session.commit()

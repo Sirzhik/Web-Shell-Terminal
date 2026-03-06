@@ -29,7 +29,7 @@ async def login(credentials: AddUserSchema, request: Request):
             raise HTTPException(status_code=status.HTTP_208_ALREADY_REPORTED, detail="Already logged in")
 
     if is_valid:
-        await remove_session(current_session)
+        await db_operator.remove_session(current_session)
 
         content = {"message": "Login successful"}
         response = JSONResponse(content=content)
@@ -78,7 +78,7 @@ async def logout(request: Request):
     current_session = request.cookies.get("session")
     
     if current_session:
-        await remove_session(current_session)
+        await db_operator.remove_session(current_session)
     
     return response
 
