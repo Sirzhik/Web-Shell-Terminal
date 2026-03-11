@@ -3,7 +3,6 @@ include/
 lib/
 local/
 src/__pycache__/
-__init__.py
 src/database/
 __pycache__/
 src/database/*.db

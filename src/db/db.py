@@ -110,10 +110,10 @@ class DatabaseOperator:
             await conn.run_sync(Base.metadata.create_all)
             await self.add_group("default")
 
-    async def init_db(self):
+    async def init_db(self, create_if_not_exists: bool = True):
         if config.DB_TYPE == 'sqlite':
             db_dir = os.path.dirname(DB_DIRECTORY)
-            if db_dir and not os.path.exists(db_dir):
+            if db_dir and not os.path.exists(db_dir) and create_if_not_exists:
                 os.makedirs(db_dir, exist_ok=True)
         if not await self.table_exists('sessions'):
             await self.setup()
