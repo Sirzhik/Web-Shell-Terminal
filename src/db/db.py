@@ -108,7 +108,8 @@ class DatabaseOperator:
         async with self.engine.begin() as conn:
             await conn.run_sync(Base.metadata.drop_all)
             await conn.run_sync(Base.metadata.create_all)
-            await self.add_group("default")
+            
+        await self.add_group("default")
 
     async def init_db(self, create_if_not_exists: bool = True):
         if config.DB_TYPE == 'sqlite':

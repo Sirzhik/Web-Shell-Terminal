@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: wst-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wstdb
+      POSTGRES_USER: wstuser
+      POSTGRES_PASSWORD: wstpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wstuser -d wstdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: wst-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "${PGADMIN_PORT:-5051}:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  wst:
+    image: wst:latest
+    container_name: wst-app
+    restart: unless-stopped
+    environment:
+      SECRET: blah_blah_blah
+      ADMIN_PASSWORD: admin
+      HOST: 0.0.0.0
+      PORT: 2280
+
+      DB_TYPE: postgresql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: wstdb
+      DB_USER: wstuser
+      DB_PASSWORD: wstpass
+      DB_DIRECTORY: database
+    ports:
+      - "2280:2280"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  pgadmin_data:

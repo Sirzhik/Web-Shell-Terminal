@@ -23,3 +23,5 @@ db_OLD.py
 .DS_Store
 *.log
 src/.DS_Store
+database/*.db
+*.db
