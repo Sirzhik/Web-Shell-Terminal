@@ -33,6 +33,7 @@ services:
         condition: service_healthy
 
   wst:
+    build: .
     image: wst:latest
     container_name: wst-app
     restart: unless-stopped
