@@ -23,6 +23,7 @@ sh fast-run.sh # simple demo of WST powered by SQLite
 
 ```bash
 # Or you run example docker-compose if you want to:
+docker compose -f example-docker-compose.yml build --no-cache
 docker compose -f example-docker-compose.yml up
 ```
 
