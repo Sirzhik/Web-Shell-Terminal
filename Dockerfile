@@ -41,5 +41,5 @@ COPY src/ src/
 WORKDIR /app/src
 RUN npm install @xterm/xterm 
 
-EXPOSE ${DB_PORT}
+EXPOSE ${PORT}
 CMD ["python3", "main.py"]
