@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  labels:
+    app: wst
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wst
+  template:
+    metadata:
+      labels:
+        app: wst
+    spec:
+      containers:
+      - name: wst-container
+        image: serhiihorban/wst:latest
+        ports:
+        - containerPort: 2280
+        env:
+        - name: ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wst-secret
+              key: admin_password
+        - name: SECRET
+          valueFrom:
+            secretKeyRef:
+              name: wst-secret
+              key: secret
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: wst-secret
+              key: db_user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wst-secret
+              key: db_password
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: wst-config
+              key: db-host
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: wst-config
+              key: db-port
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: wst-config
+              key: db-name
+        - name: DB_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: wst-config
+              key: db-type
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: wst-service
+spec:
+  type: NodePort
+  selector:
+    app: wst
+  ports:
+    - port: 2280
+      targetPort: 2280
+      nodePort: 30100

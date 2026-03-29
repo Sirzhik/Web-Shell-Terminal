@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wst-config
+data:
+  db-host: "postgres-service"
+  db-port: "5432"
+  db-name: "dbname"
+  db-type: "postgresql"
