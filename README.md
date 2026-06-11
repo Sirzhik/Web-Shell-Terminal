@@ -10,7 +10,7 @@ Web Shell Terminal (WST) is a web-based SSH client for system administrators. If
 ## Installation
 
 ### Important
-Before running WST, update the `admin` passkey and the encryption key in `src/.env` to your own values
+Before running WST, update the `admin` passkey and the encryption key in `src/.env` to your own values.
 
 ### Run via Docker
 Clone the repository and run the included script:
